@@ -12,24 +12,25 @@ import {
   StyleSheet,
   Text,
   View,
-  Button
+  TextInput
 } from 'react-native';
 
 function App(): React.JSX.Element {
   
-  const [count, setCount] = useState(0);
-  const increment = () => setCount(count + 1);
-  const decrement = () => setCount(count - 1);
-
+  const [text, setText] = useState('');
+  
+  const handleTextChange = (text: string) => {
+    setText(text);
+  }
+  
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.button}>
-        <Button title="Incrementar" onPress={increment} />
+      <View style={styles.textInput}>
+        <TextInput onChangeText={handleTextChange} value={text} style={styles.textInput} placeholder='Ingrese un texto' />
       </View>
-      <View style={styles.button}>
-        <Button title="Decrementar" onPress={decrement} />
+      <View>
       </View>
-      <Text style={styles.text}>{count}</Text>
+      <Text style={styles.text}>{text}</Text>
     </SafeAreaView>
   );
 }
@@ -46,15 +47,18 @@ const styles = StyleSheet.create({
     fontSize: 20,
     textAlign: 'center',
     margin: 10,
-    color: 'black',
+    color: 'blue',
     fontWeight: 'bold',
     borderColor: 'black',
     borderWidth: 1,
     width: 200,
   },
-  button: {
-    margin: 10,
+  textInput: {
     width: 200,
+    borderColor: 'black',
+    borderWidth: 1,
+    color: 'red',
+    fontSize: 20,
   },
 });
 
