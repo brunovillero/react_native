@@ -12,25 +12,40 @@ import {
   StyleSheet,
   Text,
   View,
-  TextInput
+  TextInput,
+  Button
 } from 'react-native';
 
 function App(): React.JSX.Element {
   
-  const [text, setText] = useState('');
-  
-  const handleTextChange = (text: string) => {
-    setText(text);
-  }
-  
+  const [task, setTask] = useState('');
+  const [tasks, setTasks] = useState<string[]>([]);
+
+  const handlePress = () => {
+    setTasks([...tasks, task]);
+    setTask('');
+  };
+
+  const handleRemove = (task: string) => () => {
+    setTasks(tasks.filter(t => t !== task));
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.textInput}>
-        <TextInput onChangeText={handleTextChange} value={text} style={styles.textInput} placeholder='Ingrese un texto' />
+        <TextInput onChangeText={setTask} value={task} />
       </View>
       <View>
+        <Button title='Crear' onPress={handlePress} />
       </View>
-      <Text style={styles.text}>{text}</Text>
+      <View>
+        {tasks.map((task, index) => (
+          <View>
+            <Text>{task}</Text>
+            <Button title='Remover' onPress={handleRemove(task)}/>
+          </View>
+        ))}
+      </View>
     </SafeAreaView>
   );
 }
@@ -59,6 +74,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     color: 'red',
     fontSize: 20,
+    margin: 20
   },
 });
 
