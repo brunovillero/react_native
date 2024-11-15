@@ -10,41 +10,31 @@ import React from 'react';
 import {
   SafeAreaView,
   StyleSheet,
-  Text,
   View,
-  TextInput,
+  Image,
   Button
 } from 'react-native';
 
 function App(): React.JSX.Element {
-  
-  const [task, setTask] = useState('');
-  const [tasks, setTasks] = useState<string[]>([]);
 
-  const handlePress = () => {
-    setTasks([...tasks, task]);
-    setTask('');
-  };
+  const [image, setImage] = useState('dog1');
 
-  const handleRemove = (task: string) => () => {
-    setTasks(tasks.filter(t => t !== task));
+  const getImage = (image: string) => {
+    switch (image) {
+      case 'dog1':
+        return require('./assets/dog1.jpg');
+      case 'dog2':
+        return require('./assets/dog2.jpeg');
+      default:
+        return require('./assets/dog1.jpg');
+    }
   };
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.textInput}>
-        <TextInput onChangeText={setTask} value={task} placeholder='Escribe una tarea'/>
-      </View>
       <View>
-        <Button title='Crear' onPress={handlePress} />
-      </View>
-      <View>
-        {tasks.map((task, index) => (
-          <View>
-            <Text>{task}</Text>
-            <Button title='Remover' onPress={handleRemove(task)}/>
-          </View>
-        ))}
+        <Image source={getImage(image)} style={styles.image} />
+        <Button title='Cambiar imagen' onPress={() => setImage(image === 'dog1' ? 'dog2' : 'dog1')} />
       </View>
     </SafeAreaView>
   );
@@ -58,24 +48,13 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     padding: 20,
   },
-  text: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 10,
-    color: 'blue',
-    fontWeight: 'bold',
-    borderColor: 'black',
-    borderWidth: 1,
+  image: {
     width: 200,
-  },
-  textInput: {
-    width: 200,
-    borderColor: 'black',
+    height: 200,
+    margin: 20,
     borderWidth: 1,
-    color: 'red',
-    fontSize: 20,
-    margin: 20
-  },
+    borderColor: 'black',
+  }
 });
 
 export default App;
