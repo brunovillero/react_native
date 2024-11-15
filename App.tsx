@@ -33,7 +33,7 @@ function App(): React.JSX.Element {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.textInput}>
-        <TextInput onChangeText={setTask} value={task} />
+        <TextInput onChangeText={setTask} value={task} placeholder='Escribe una tarea'/>
       </View>
       <View>
         <Button title='Crear' onPress={handlePress} />
