@@ -12,30 +12,35 @@ import {
   StyleSheet,
   View,
   Image,
-  Button
+  Button,
+  Text,
+  FlatList,
+  ImageSourcePropType
 } from 'react-native';
+
+const ImageItem = ({ imageSource, imageDescription }: { imageSource: ImageSourcePropType, imageDescription: string }) => {
+  return (
+    <View>
+      <Image source={imageSource} style={styles.image} />
+      <Text>{imageDescription}</Text>
+    </View>
+  );
+};
 
 function App(): React.JSX.Element {
 
-  const [image, setImage] = useState('dog1');
-
-  const getImage = (image: string) => {
-    switch (image) {
-      case 'dog1':
-        return require('./assets/dog1.jpg');
-      case 'dog2':
-        return require('./assets/dog2.jpeg');
-      default:
-        return require('./assets/dog1.jpg');
-    }
-  };
+  const flatListData = [
+    { imageSource: require('./assets/dog1.jpg'), imageDescription: 'Imagen 1' },
+    { imageSource: require('./assets/dog2.jpeg'), imageDescription: 'Imagen 2' },
+  ];
 
   return (
     <SafeAreaView style={styles.container}>
-      <View>
-        <Image source={getImage(image)} style={styles.image} />
-        <Button title='Cambiar imagen' onPress={() => setImage(image === 'dog1' ? 'dog2' : 'dog1')} />
-      </View>
+      <FlatList
+        data={flatListData}
+        renderItem={({ item }) => <ImageItem imageSource={item.imageSource} imageDescription={item.imageDescription} />}
+        keyExtractor={(item, index) => index.toString()}
+        />
     </SafeAreaView>
   );
 }
