@@ -15,6 +15,28 @@ import {
   TextInput,
   Button
 } from 'react-native';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import ReanimatedSwipeable from 'react-native-gesture-handler/ReanimatedSwipeable';
+import Reanimated, {
+  SharedValue,
+  useAnimatedStyle,
+} from 'react-native-reanimated';
+
+function RightAction(prog: SharedValue<number>, drag: SharedValue<number>) {
+  const styleAnimation = useAnimatedStyle(() => {
+
+    return {
+      transform: [{ translateX: drag.value + 50 }],
+    };
+  });
+
+  return (
+    <Reanimated.View style={styleAnimation}>
+      <Text style={styles.rightAction}>Eliminar</Text>
+    </Reanimated.View>
+  );
+}
+
 
 function App(): React.JSX.Element {
   
@@ -27,6 +49,7 @@ function App(): React.JSX.Element {
   };
 
   const handleRemove = (task: string) => () => {
+    console.log('handleRemove', task);
     setTasks(tasks.filter(t => t !== task));
   };
 
@@ -38,14 +61,22 @@ function App(): React.JSX.Element {
       <View>
         <Button title='Crear' onPress={handlePress} />
       </View>
-      <View>
-        {tasks.map((task, index) => (
-          <View>
+      <GestureHandlerRootView>
+      {tasks.map((task, index) => (
+          <ReanimatedSwipeable
+          containerStyle={styles.swipeable}
+          friction={2}
+          enableTrackpadTwoFingerGesture
+          rightThreshold={40}
+          renderRightActions={RightAction}
+          key={index}
+          onSwipeableOpen={handleRemove(task)}
+          onSwipeableClose={() => console.log('swipeable close')}
+        >
             <Text>{task}</Text>
-            <Button title='Remover' onPress={handleRemove(task)}/>
-          </View>
+          </ReanimatedSwipeable>
         ))}
-      </View>
+      </GestureHandlerRootView>
     </SafeAreaView>
   );
 }
@@ -75,6 +106,15 @@ const styles = StyleSheet.create({
     color: 'red',
     fontSize: 20,
     margin: 20
+  },
+  rightAction: { 
+    width: 60, 
+    backgroundColor: 'red',
+  },
+  swipeable: {
+    width: 200,
+    backgroundColor: 'green',
+    alignItems: 'center',
   },
 });
 
