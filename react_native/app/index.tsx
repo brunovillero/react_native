@@ -1,37 +1,28 @@
 import { useState, useEffect } from "react";
-import { Text, View, StyleSheet } from "react-native";
-import * as Location from 'expo-location';
+import { Text, View, StyleSheet, Image, Button } from "react-native";
+import * as ImagePicker from 'expo-image-picker';
 
 export default function Index() {
-  const [location, setLocation] = useState<Location.LocationObject | null>(null);
-  const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  
+  const [image, setImage] = useState<string | null>(null);
 
-  useEffect(() => {
-    async function getCurrentLocation() {
-      
-      let { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== 'granted') {
-        setErrorMsg('Permission to access location was denied');
-        return;
-      }
+  const pickImage = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ['images', 'videos'],
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
 
-      let location = await Location.getCurrentPositionAsync({});
-      setLocation(location);
+    if (!result.canceled) {
+      setImage(result.assets[0].uri);
     }
-
-    getCurrentLocation();
-  }, []);
-
-  let text = 'Waiting...';
-  if (errorMsg) {
-    text = errorMsg;
-  } else if (location) {
-    text = JSON.stringify(location);
-  }
+  };
 
   return (
     <View style={styles.container}>
-      <Text style={styles.paragraph}>{text}</Text>
+      <Button title="Pick an image from camera roll" onPress={pickImage} />
+      {image && <Image source={{ uri: image }} style={styles.image} />}
     </View>
   );
 }
@@ -41,10 +32,9 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    padding: 20,
   },
-  paragraph: {
-    fontSize: 18,
-    textAlign: 'center',
+  image: {
+    width: 200,
+    height: 200,
   },
 });
