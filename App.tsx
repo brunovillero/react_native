@@ -1,61 +1,61 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- */
+import React, { useState, useEffect } from 'react';
+import { View, Text, StyleSheet, Dimensions, Platform } from 'react-native';
 
-import { useState } from 'react';
-import React from 'react';
-import {
-  SafeAreaView,
-  StyleSheet,
-  Text,
-  View,
-  Button
-} from 'react-native';
+const App = () => {
+  // Obtenemos las dimensiones de la pantalla
+  const { width, height } = Dimensions.get('window');
 
-function App(): React.JSX.Element {
-  
-  const [count, setCount] = useState(0);
-  const increment = () => setCount(count + 1);
-  const decrement = () => setCount(count - 1);
+  // Variables para el tamaño de los estilos
+  const [screenSize, setScreenSize] = useState('small');
+
+  useEffect(() => {
+    // Función para verificar el tamaño de la pantalla y cambiar el tamaño
+    const updateScreenSize = () => {
+      if (width < 375) {
+        setScreenSize('small');
+      } else if (width >= 375 && width < 768) {
+        setScreenSize('medium');
+      } else {
+        setScreenSize('large');
+      }
+    };
+
+    updateScreenSize();
+
+    // Escuchar cambios en las dimensiones del dispositivo
+    const subscription = Dimensions.addEventListener('change', updateScreenSize);
+
+    // Cleanup: remover el listener cuando el componente se desmonte
+    return () => subscription.remove();
+  }, [width, height]);
+
+  // Definir estilos basados en el tamaño de la pantalla
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+      padding: screenSize === 'small' ? 10 : screenSize === 'medium' ? 20 : 30,
+      backgroundColor: screenSize === 'small' ? '#ffcccc' : screenSize === 'medium' ? '#ccffcc' : '#ccccff',
+    },
+    title: {
+      fontSize: screenSize === 'small' ? 20 : screenSize === 'medium' ? 30 : 40,
+      fontWeight: 'bold',
+      color: '#333',
+    },
+    subtitle: {
+      fontSize: screenSize === 'small' ? 14 : screenSize === 'medium' ? 18 : 24,
+      color: '#555',
+      marginTop: 10,
+    },
+  });
 
   return (
-    <SafeAreaView style={styles.container}>
-      <View style={styles.button}>
-        <Button title="Incrementar" onPress={increment} />
-      </View>
-      <View style={styles.button}>
-        <Button title="Decrementar" onPress={decrement} />
-      </View>
-      <Text style={styles.text}>{count}</Text>
-    </SafeAreaView>
+    <View style={styles.container}>
+      <Text style={styles.title}>Pantalla {screenSize}</Text>
+      <Text style={styles.subtitle}>Este contenido cambia según el tamaño de la pantalla.</Text>
+    </View>
   );
-}
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: 20,
-  },
-  text: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 10,
-    color: 'black',
-    fontWeight: 'bold',
-    borderColor: 'black',
-    borderWidth: 1,
-    width: 200,
-  },
-  button: {
-    margin: 10,
-    width: 200,
-  },
-});
+};
 
 export default App;
