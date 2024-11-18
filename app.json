@@ -1,4 +1,12 @@
 {
-  "name": "react_native",
-  "displayName": "react_native"
+  "expo": {
+    "plugins": [
+      [
+        "expo-location",
+        {
+          "locationAlwaysAndWhenInUsePermission": "Allow $(PRODUCT_NAME) to use your location."
+        }
+      ]
+    ]
+  }
 }
