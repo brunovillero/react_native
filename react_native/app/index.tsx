@@ -28,8 +28,6 @@ export default function Index() {
   }
 
   async function takePicture() {
-    console.log('takePicture');
-    console.log(cameraReady);
     if (cameraReady && cameraRef.current) {
       const options: CameraPictureOptions = {
         quality: 0.5,
